@@ -6,8 +6,8 @@
 #include <SFML/Graphics.hpp>
 using namespace std;
 
-const int X_size = 1600;
-const int Y_size = 1400;
+const int X_size = 800;
+const int Y_size = 800;
 
 enum class EstadoJuego {
     Menu,
