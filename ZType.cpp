@@ -38,7 +38,7 @@ int main() {
     sf::Font fuente;
 
     if (!fuente.loadFromFile("assets/OpenSans-Regular.ttf")) {
-        std::cerr << "No se pudo cargar la fuente" << std::endl;
+        std::cerr << "No se pudo cargar " << std::endl;
         return -1;
     }
 
@@ -60,7 +60,7 @@ int main() {
 
                 if (TextNewGame.getGlobalBounds().contains(mousePosF)) {
                     estado = EstadoJuego::Jugando;
-                    std::cout << "Juego iniciado (pero la lógica está deshabilitada por ahora)" << std::endl;
+                    std::cout << "Juego iniciado" << std::endl;
                 }
             }
         }
