@@ -22,99 +22,115 @@ struct Word {
         : text(word), x(startX), y(startY) {}
 };
 
-vector<Word> words;
-bool palabras_generadas = false;
+class ZTypeGame {
+private:
+    vector<Word> words;
+    sf::RenderWindow* window;
+    sf::Font font;
+    bool palabras_generadas = false;
 
-void draw_player(sf::RenderWindow& window, sf::Font& fuente, sf::Text& playerText) {
-    playerText.setPosition((X_size/2) - 50, Y_size - 150);
-    playerText.setFillColor(sf::Color::White);
-    window.draw(playerText);
-}
-
-void word_generator(sf::RenderWindow& window, sf::Font& fuente) {
-    for (const auto& word : words) {
-        sf::Text text(word.text, fuente, 30);
-        text.setPosition(word.x, word.y);
-        text.setFillColor(sf::Color::White);
-        window.draw(text);
+public:
+    ZTypeGame(sf::RenderWindow* win) : window(win) {
+        
+        if (!font.loadFromFile("assets/OpenSans-Regular.ttf")) {
+            cout << "No se pudo cargar la fuente" << endl;
+        }
     }
-}
+    
+    void draw() {
 
-void draw_menu(sf::RenderWindow& window, sf::Font& fuente, sf::Text& TextNewGame) {
-    sf::Text titulo("Kill the word", fuente, 120);
-    titulo.setPosition((X_size / 2.f) - 350, 300);
-    titulo.setFillColor(sf::Color::White);
+        window->clear(sf::Color::Black);
 
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+        sf::Texture fondo;
+        if (!fondo.loadFromFile("assets/background.jpg")) {
+            std::cerr << "No se pudo cargar la imagen" << std::endl;
+            return;
+        }
 
-    if (TextNewGame.getGlobalBounds().contains(mousePosF)) {
-        TextNewGame.setFillColor(sf::Color::Yellow);
-    } else {
+        sf::Sprite spriteBackground;
+        spriteBackground.setTexture(fondo);
+        spriteBackground.setPosition(0, 0);
+        spriteBackground.setScale(2.3f, 2.0f);
+
+        window->draw(spriteBackground);
+        word_generator();
+        draw_UI();
+        draw_player();
+        
+        window->display();
+    }
+
+    void draw_player() {
+        sf::Texture texturaJugador;
+            if (!texturaJugador.loadFromFile("assets/player.png")) {
+                std::cerr << "No se pudo cargar la imagen del jugador" << std::endl;
+                return;
+            }
+
+            sf::Sprite spriteJugador;
+            spriteJugador.setTexture(texturaJugador);
+            spriteJugador.setPosition(740, 1100);
+            spriteJugador.setScale(0.3f, 0.3f);
+
+            window->draw(spriteJugador);
+    }
+
+    void word_generator() {
+        for (const auto& word : words) {
+            sf::Text text(word.text, font, 30);
+            text.setPosition(word.x, word.y);
+            text.setFillColor(sf::Color::White);
+            window->draw(text);
+        }
+    }
+
+    void draw_menu(sf::RenderWindow& window, sf::Font& fuente, sf::Text& TextNewGame) {
+        sf::Text titulo("Kill the word", fuente, 120);
+        titulo.setPosition((X_size / 2.f) - 350, 300);
+        titulo.setFillColor(sf::Color::White);
+
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+
+        if (TextNewGame.getGlobalBounds().contains(mousePosF)) {
+            TextNewGame.setFillColor(sf::Color::Yellow);
+        } else {
+            TextNewGame.setFillColor(sf::Color::White);
+        }
+
+        window.draw(titulo);
+        window.draw(TextNewGame);
+    }
+
+    void draw_UI(){
+        sf::Text TextNewGame("New game", font, 40);
+        TextNewGame.setPosition((X_size / 2.f) - 100, Y_size - 300);
         TextNewGame.setFillColor(sf::Color::White);
     }
 
-    window.draw(titulo);
-    window.draw(TextNewGame);
-}
+    
+};
 
 int main() {
-    EstadoJuego estado = EstadoJuego::Menu;
-    sf::RenderWindow window(sf::VideoMode(X_size, Y_size), "SFML works!");
-    sf::Font fuente;
-
-    if (!fuente.loadFromFile("assets/OpenSans-Regular.ttf")) {
-        std::cerr << "No se pudo cargar la fuente" << std::endl;
-        return -1;
-    }
-
-    sf::Text TextNewGame("New game", fuente, 40);
-    TextNewGame.setPosition((X_size / 2.f) - 100, Y_size - 300);
-    TextNewGame.setFillColor(sf::Color::White);
-
-    sf::Text textPlayer("player", fuente, 40);
-    textPlayer.setPosition((X_size / 2.f) - 100, Y_size - 300);
-    textPlayer.setFillColor(sf::Color::White);
-
+    srand(static_cast<unsigned>(time(nullptr)));
+    
+    sf::RenderWindow window(sf::VideoMode(1600, 1400), "ZType - Kill the Words!");
+    window.setFramerateLimit(60);
+    
+    ZTypeGame game(&window);
+    sf::Clock deltaClock;
+    
     while (window.isOpen()) {
+        float deltaTime = deltaClock.restart().asSeconds();
         sf::Event event;
+        
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
-
-            if (estado == EstadoJuego::Menu &&
-                event.type == sf::Event::MouseButtonPressed &&
-                event.mouseButton.button == sf::Mouse::Left) {
-
-                sf::Vector2f mousePosF(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
-
-                if (TextNewGame.getGlobalBounds().contains(mousePosF)) {
-                    estado = EstadoJuego::Jugando;
-                    std::cout << "Juego iniciado" << std::endl;
-                }
-            }
+            } 
         }
-
-        window.clear(sf::Color::Black);
-
-        if (estado == EstadoJuego::Menu) {
-            draw_menu(window, fuente, TextNewGame);
-            
-        } else if (estado == EstadoJuego::Jugando) {
-            draw_player(window, fuente, textPlayer);
-
-            if (!palabras_generadas) {
-                    words.push_back(Word("hola", rand() % X_size, 100));
-                    words.push_back(Word("hola 2", rand() % X_size, 100));
-                    words.push_back(Word("hola 3", rand() % X_size, 100));
-                    palabras_generadas = true;
-                }
-                
-            word_generator(window, fuente);
-        }
-
-        window.display();
+        game.draw();
     }
-
+    
     return 0;
 }
