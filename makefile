@@ -2,42 +2,35 @@
 SRC_DIR := src
 BIN_DIR := bin
 
-SFML := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lbox2d
+# Librerías
+SFML := -IC:/SFML/include -LC:/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lbox2d
 
-# Obtener todos los archivos .cpp en el directorio de origen
+# Archivos fuente
 CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
-
-# Generar los nombres de los archivos .exe en el directorio de destino
 EXE_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%.exe,$(CPP_FILES))
 
-# Regla para compilar cada archivo .cpp y generar el archivo .exe correspondiente
-$(BIN_DIR)/%.exe: $(SRC_DIR)/%.cpp
-	g++ $< -o $@ $(SFML) -Iinclude
-
-# Regla por defecto para compilar todos los archivos .cpp
+# Regla para compilar todos los .cpp
 all: $(EXE_FILES)
 
-# Regla para ejecutar cada archivo .exe
-#run%: $(BIN_DIR)/%.exe
-#	./$<
+# Regla para compilar cada archivo individual
+$(BIN_DIR)/%.exe: $(SRC_DIR)/%.cpp
+	g++ $< -o $@ $(SFML)
 
-# Regla para limpiar los archivos generados
-clean:
-	rm -f $(EXE_FILES)
+# Ejecutar el programa principal
+run: $(BIN_DIR)/programa.exe
+	.\$(BIN_DIR)\programa.exe
 
-.PHONY: all clean
-.PHONY: run-%
-
-# compilar
-# g++ ZType.cpp -o bin/programa.exe
-# run
-# .\bin\programa.exe
-# remove
-# rm -f bin\programa.exe
-
+# Compilar solo el archivo principal
 compile:
-	g++ ZType.cpp -o bin/programa.exe -IC:/SFML/include -LC:/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system
-	.\bin\programa.exe
+	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
 
-run:
-	.\bin\programa.exe
+# Compilar solo el archivo principal
+execute:
+	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
+	.\$(BIN_DIR)\programa.exe
+
+# Limpiar binarios
+clean:
+	del /Q $(BIN_DIR)\*.exe
+
+.PHONY: all clean run compile
