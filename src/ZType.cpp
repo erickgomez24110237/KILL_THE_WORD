@@ -24,6 +24,13 @@ struct Word {
 
 class ZTypeGame {
 private:
+    vector<string> wordList = {
+            "hola", "casa", "teclado", "raton", "pantalla", "codigo", "juego",
+            "visual", "consola", "carta", "programa", "ventana", "archivo",
+            "memoria", "proceso", "sistema", "usuario", "internet", "servidor",
+            "cliente", "datos", "algoritmo", "funcion", "variable", "bucle"
+        };
+
     vector<Word> words;
     sf::RenderWindow* window;
     sf::Font font;
@@ -53,10 +60,11 @@ public:
         spriteBackground.setScale(2.3f, 2.0f);
 
         window->draw(spriteBackground);
-        word_generator();
+        
         draw_UI();
         draw_player();
-        
+        word_generator();
+
         window->display();
     }
 
@@ -76,6 +84,15 @@ public:
     }
 
     void word_generator() {
+        if (!palabras_generadas) {
+            for (const auto& word : wordList) {
+                float x = static_cast<float>(rand() % (X_size - 200));
+                float y = static_cast<float>(rand() % (Y_size - 200));
+                words.emplace_back(word, x, y);
+            }
+            palabras_generadas = true;
+        }
+        
         for (const auto& word : words) {
             sf::Text text(word.text, font, 30);
             text.setPosition(word.x, word.y);
@@ -107,8 +124,6 @@ public:
         TextNewGame.setPosition((X_size / 2.f) - 100, Y_size - 300);
         TextNewGame.setFillColor(sf::Color::White);
     }
-
-    
 };
 
 int main() {
@@ -119,7 +134,7 @@ int main() {
     
     ZTypeGame game(&window);
     sf::Clock deltaClock;
-    
+
     while (window.isOpen()) {
         float deltaTime = deltaClock.restart().asSeconds();
         sf::Event event;
