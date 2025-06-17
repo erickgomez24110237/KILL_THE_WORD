@@ -4,6 +4,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
+#include <algorithm>
+#include <random>
+
 using namespace std;
 
 const int X_size = 1600;
@@ -17,9 +20,10 @@ enum class EstadoJuego {
 struct Word {
     string text;
     float x, y;
+    float speed;
 
-    Word(const string& word, float startX, float startY)
-        : text(word), x(startX), y(startY) {}
+    Word(const string& word, float startX, float startY, float wordSpeed)
+        : text(word), x(startX), y(startY), speed(wordSpeed) {}
 };
 
 class ZTypeGame {
@@ -34,10 +38,19 @@ private:
     vector<Word> words;
     sf::RenderWindow* window;
     sf::Font font;
+    sf::Clock spawnClock;
+    sf::Clock gameClock;
     bool palabras_generadas = false;
     EstadoJuego estado = EstadoJuego::Menu;
-
+    float spawnInterval;
+    float wordSpeed;
     sf::Text TextNewGame;
+
+    // Generador de números aleatorios
+    random_device rd;
+    mt19937 gen;
+    uniform_int_distribution<> wordDist;
+    uniform_real_distribution<> xPosDist;
 
 public:
     ZTypeGame(sf::RenderWindow* win) : window(win) {
@@ -50,6 +63,21 @@ public:
         TextNewGame.setCharacterSize(40);
         TextNewGame.setPosition((X_size / 2.f) - 100, Y_size - 300);
         TextNewGame.setFillColor(sf::Color::White);
+
+        int score = 0;
+        int lives = 3;
+        float spawnInterval = 2.0f; // Spawn palabra cada 2 segundos
+        wordSpeed = 50.0f; // Pixels por segundo
+    }
+
+    void spawnWord() {
+        if (spawnClock.getElapsedTime().asSeconds() >= spawnInterval) {
+            string newWord = wordList[wordDist(gen)];
+            float startX = xPosDist(gen);
+            
+            words.emplace_back(newWord, startX, -50, wordSpeed);
+            spawnClock.restart();
+        }
     }
 
     void handle_event(sf::Event& event) {

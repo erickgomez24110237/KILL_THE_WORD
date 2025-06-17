@@ -29,6 +29,10 @@ execute:
 	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
 	.\$(BIN_DIR)\programa.exe
 
+execute2:
+	g++ src/ZType2.cpp -o bin/programa2.exe $(SFML)
+	.\$(BIN_DIR)\programa2.exe
+
 # Limpiar binarios
 clean:
 	del /Q $(BIN_DIR)\*.exe
