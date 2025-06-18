@@ -1,5 +1,101 @@
 @startuml diagrama
 
-class Juego
+class ZombyType
+class GameState
+class InputHandler
+class Renderer
+class Word
+class WordSpawner
 
-@enduml
+ZombyType o-- GameState 
+ZombyType o-- InputHandler
+ZombyType o-- Renderer  
+ZombyType o-- Word
+ZombyType o-- WordSpawner
+
+
+class GameState {
+  -score: int
+  -lives: int
+  -gameClock: sf::Clock
+  -gameOver: bool
+  -currentInput: std::string
+  +GameState()
+  +addScore(points: int): void
+  +loseLife(): void
+  +resetGame(): void
+  +isGameOver(): bool
+  +getScore(): int
+  +getLives(): int
+  +getElapsedTime(): int
+  +getCurrentInput(): std::string
+  +setCurrentInput(input: const std::string&): void
+  +clearCurrentInput(): void
+}
+
+
+class InputHandler {
+  -currentInput: std::string
+  +InputHandler()
+  +handleTextInput(character: char, words: std::vector<Word>&): void
+  +handleBackspace(): void
+  +processWordMatch(words: std::vector<Word>&, gameState: GameState&): bool
+  +clearInput(): void
+  +getCurrentInput(): std::string
+  +handleGameInput(event: const sf::Event&, gameState: GameState&, words: std::vector<Word>&): bool
+}
+
+class Renderer {
+  -window: sf::RenderWindow*
+  -font: sf::Font
+  -backgroundTexture: sf::Texture
+  -zombieTexture: sf::Texture
+  -playerTexture: sf::Texture
+  -backgroundSprite: sf::Sprite
+  -zombieSprite: sf::Sprite
+  -playerSprite: sf::Sprite
+  
+  +Renderer(win: sf::RenderWindow*)
+  +loadAssets(): bool
+  +clear(): void
+  +display(): void
+  +drawBackground(): void
+  +drawWords(words: const std::vector<Word>&): void
+  +drawUI(gameState: const GameState&): void
+  +drawPlayer(): void
+  +drawGameOver(gameState: const GameState&): void
+}
+
+class Word {
+  +text: std::string
+  +originalText: std::string
+  +x: float
+  +y: float
+  +progress: int
+  +isActive: bool
+  +color: sf::Color
+  +speed: float
+  +Word(word: const std::string&, startX: float, startY: float, wordSpeed: float)
+}
+
+class WordSpawner {
+  -wordList: std::vector<std::string>
+  -spawnClock: sf::Clock
+  -spawnInterval: float
+  -wordSpeed: float
+  -rd: std::random_device
+  -gen: std::mt19937
+  -wordDist: std::uniform_int_distribution<>
+  -xPosDist: std::uniform_real_distribution<>
+  
+  +WordSpawner()
+  +addWord(word: const std::string&): void
+  +shouldSpawnWord(): bool
+  +generateWord(): Word
+  +updateDifficulty(): void
+  +resetSpawner(): void
+  +getSpawnInterval(): float
+  +getWordSpeed(): float
+}
+
+
