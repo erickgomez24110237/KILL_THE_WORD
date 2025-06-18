@@ -1,36 +1,33 @@
-# Directorios de origen y destino
+# Directorios
 SRC_DIR := src
 BIN_DIR := bin
+INCLUDE_DIR := include
 
-# Librerías
-SFML := -IC:/SFML/include -LC:/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lbox2d
+# Archivos
+MAIN := $(SRC_DIR)/main.cpp
+OUTPUT := $(BIN_DIR)/programa.exe
 
-# Archivos fuente
-CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
-EXE_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%.exe,$(CPP_FILES))
+# Compilador y flags
+CXX := g++
+CXXFLAGS := -I$(INCLUDE_DIR) -std=c++17
+LIBS := -lsfml-graphics -lsfml-window -lsfml-system
 
-# Regla para compilar todos los .cpp
-all: $(EXE_FILES)
+# Regla por defecto
+all: execute
 
-# Regla para compilar cada archivo individual
-$(BIN_DIR)/%.exe: $(SRC_DIR)/%.cpp
-	g++ $< -o $@ $(SFML)
-
-# Ejecutar el programa principal
-run: $(BIN_DIR)/programa.exe
-	.\$(BIN_DIR)\programa.exe
-
-# Compilar solo el archivo principal
-compile:
-	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
-
-# Compilar solo el archivo principal
+# Compilación principal
 execute:
-	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
-	.\$(BIN_DIR)\programa.exe
+	$(CXX) $(CXXFLAGS) $(MAIN) -o $(OUTPUT) $(LIBS)
+	.\$(OUTPUT)
+
+
+
+# Ejecutar el programa
+run: execute
+	.\$(OUTPUT)
 
 # Limpiar binarios
 clean:
 	del /Q $(BIN_DIR)\*.exe
 
-.PHONY: all clean run compile
+.PHONY: all clean run execute
