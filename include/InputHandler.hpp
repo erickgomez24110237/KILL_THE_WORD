@@ -46,6 +46,10 @@ public:
                     word.setActive(true);
                 }
 
+<<<<<<< HEAD
+=======
+                // Palabra completa
+>>>>>>> a54fe4d5547f9c89da89e6320f216d896e503394
                 if (currentInput == word.originalText) {
                     gameState.addScore(word.originalText.length() * 10);
                     word.progress = word.originalText.length();
@@ -53,7 +57,11 @@ public:
                     return true;
                 }
 
+<<<<<<< HEAD
                 
+=======
+                // Progreso parcial
+>>>>>>> a54fe4d5547f9c89da89e6320f216d896e503394
                 word.progress = currentInput.length();
                 word.text = word.originalText.substr(currentInput.length());
                 return true;

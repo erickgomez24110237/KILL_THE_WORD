@@ -20,6 +20,11 @@ execute:
 	$(CXX) $(CXXFLAGS) $(MAIN) -o $(OUTPUT) $(LIBS)
 	.\$(OUTPUT)
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a54fe4d5547f9c89da89e6320f216d896e503394
 # Ejecutar el programa
 run: execute
 	.\$(OUTPUT)

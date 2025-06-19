@@ -49,7 +49,11 @@ public:
             spawnClock.restart();
             return Word(newWord, startX, -50, wordSpeed);
         }
+<<<<<<< HEAD
         return Word("", 0, 0, 0); 
+=======
+        return Word("", 0, 0, 0); // Palabra vacía si no debe generar
+>>>>>>> a54fe4d5547f9c89da89e6320f216d896e503394
     }
     
     void updateDifficulty() {
