@@ -6,53 +6,54 @@
 
 class Word {
 public:
-    std::string text;
-    std::string originalText;
-    float x, y;
-    int progress;
-    bool isActive;
-    sf::Color color;
-    float speed;
+    std::string Text;
+    std::string OriginalText;
+    float X;
+    float Y;
+    int Progress;
+    bool IsActive;
+    sf::Color Color;
+    float Speed;
     
     Word(const std::string& word, float startX, float startY, float wordSpeed) 
-        : text(word), originalText(word), x(startX), y(startY), 
-          progress(0), isActive(false), color(sf::Color::White), speed(wordSpeed) {}
+        : Text(word), OriginalText(word), X(startX), Y(startY), 
+          Progress(0), IsActive(false), Color(sf::Color::White), Speed(wordSpeed) {}
     
-    void updatePosition(float deltaTime) {
-        y += speed * deltaTime;
+    void UpdatePosition(float deltaTime) {
+        Y += Speed * deltaTime;
     }
     
-    bool isOutOfBounds(float screenHeight) const {
-        return y > screenHeight;
+    bool IsOutOfBounds(float screenHeight) const {
+        return Y > screenHeight;
     }
     
-    void setActive(bool active) {
-        isActive = active;
+    void SetActive(bool active) {
+        IsActive = active;
         if (active) {
-            color = sf::Color::Yellow;
+            Color = sf::Color::Yellow;
         } else {
-            color = sf::Color::White;
+            Color = sf::Color::White;
         }
     }
     
-    void incrementProgress() {
-        if (progress < originalText.length()) {
-            progress++;
-            if (progress < text.length()) {
-                text = originalText.substr(progress);
+    void IncrementProgress() {
+        if (Progress < OriginalText.length()) {
+            Progress++;
+            if (Progress < Text.length()) {
+                Text = OriginalText.substr(Progress);
             }
         }
     }
     
-    void resetProgress() {
-        progress = 0;
-        text = originalText;
-        isActive = false;
-        color = sf::Color::White;
+    void ResetProgress() {
+        Progress = 0;
+        Text = OriginalText;
+        IsActive = false;
+        Color = sf::Color::White;
     }
     
-    bool isCompleted() const {
-        return progress >= originalText.length();
+    bool IsCompleted() const {
+        return Progress >= OriginalText.length();
     }
 };
 

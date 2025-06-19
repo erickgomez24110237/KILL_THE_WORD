@@ -9,53 +9,58 @@
 
 class InputHandler {
 private:
-    std::string currentInput;
+    std::string m_currentInput;
+
+    bool IsValidInputCharacter(char character) {
+        return (character >= 'a' && character <= 'z') || 
+               (character >= 'A' && character <= 'Z') ||
+               (character >= '0' && character <= '9');
+    }
 
 public:
-    InputHandler() : currentInput("") {}
+    InputHandler() : m_currentInput("") {}
     
-    void handleTextInput(char character, std::vector<Word>& words) {
-        if (!isValidInputCharacter(character)) return;
+    void HandleTextInput(char character, std::vector<Word>& words) {
+        if (!IsValidInputCharacter(character)) return;
 
-        std::string tentativeInput = currentInput + character;
+        std::string tentativeInput = m_currentInput + character;
 
         for (auto& word : words) {
-            if (word.originalText.substr(0, tentativeInput.length()) == tentativeInput) {
-                currentInput = tentativeInput; 
+            if (word.OriginalText.substr(0, tentativeInput.length()) == tentativeInput) {
+                m_currentInput = tentativeInput; 
                 return;
             }
         }
     }
     
-    void handleBackspace() {
-        if (!currentInput.empty()) {
-            currentInput.pop_back();
+    void HandleBackspace() {
+        if (!m_currentInput.empty()) {
+            m_currentInput.pop_back();
         }
     }
     
-    bool processWordMatch(std::vector<Word>& words, GameState& gameState) {
-        if (currentInput.empty()) return false;
+    bool ProcessWordMatch(std::vector<Word>& words, GameState& gameState) {
+        if (m_currentInput.empty()) return false;
 
         bool foundMatch = false;
 
         for (auto& word : words) {
-            if (word.originalText.substr(0, currentInput.length()) == currentInput) {
+            if (word.OriginalText.substr(0, m_currentInput.length()) == m_currentInput) {
                 foundMatch = true;
 
-                if (!word.isActive) {
-                    word.setActive(true);
+                if (!word.IsActive) {
+                    word.SetActive(true);
                 }
 
-                if (currentInput == word.originalText) {
-                    gameState.addScore(word.originalText.length() * 10);
-                    word.progress = word.originalText.length();
-                    clearInput();
+                if (m_currentInput == word.OriginalText) {
+                    gameState.AddScore(word.OriginalText.length() * 10);
+                    word.Progress = word.OriginalText.length();
+                    ClearInput();
                     return true;
                 }
 
-                
-                word.progress = currentInput.length();
-                word.text = word.originalText.substr(currentInput.length());
+                word.Progress = m_currentInput.length();
+                word.Text = word.OriginalText.substr(m_currentInput.length());
                 return true;
             }
         }
@@ -63,48 +68,41 @@ public:
         return foundMatch;
     }
     
-    void clearInput() {
-        currentInput = "";
+    void ClearInput() {
+        m_currentInput = "";
     }
     
-    std::string getCurrentInput() const {
-        return currentInput;
+    std::string GetCurrentInput() const {
+        return m_currentInput;
     }
     
-    bool handleGameInput(const sf::Event& event, GameState& gameState, std::vector<Word>& words) {
+    bool HandleGameInput(const sf::Event& event, GameState& gameState, std::vector<Word>& words) {
         if (event.type == sf::Event::KeyPressed) {
-            if (gameState.isGameOver()) {
+            if (gameState.IsGameOver()) {
                 if (event.key.code == sf::Keyboard::R) {
-                    gameState.resetGame();
-                    clearInput();
+                    gameState.ResetGame();
+                    ClearInput();
                     return true;
                 } else if (event.key.code == sf::Keyboard::Escape) {
                     return false;
                 }
             } else {
                 if (event.key.code == sf::Keyboard::BackSpace) {
-                    handleBackspace();
+                    HandleBackspace();
                     return true;
                 }
             }
         }
 
         if (event.type == sf::Event::TextEntered) {
-            if (!gameState.isGameOver()) {
+            if (!gameState.IsGameOver()) {
                 char character = static_cast<char>(event.text.unicode);
-                handleTextInput(character, words);
+                HandleTextInput(character, words);
                 return true;
             }
         }
 
         return false;
-    }
-
-private:
-    bool isValidInputCharacter(char character) {
-        return (character >= 'a' && character <= 'z') || 
-               (character >= 'A' && character <= 'Z') ||
-               (character >= '0' && character <= '9');
     }
 };
 

@@ -6,60 +6,60 @@
 
 class GameState {
 private:
-    int score;
-    int lives;
-    sf::Clock gameClock;
-    bool gameOver;
-    std::string currentInput;
+    int m_score;
+    int m_lives;
+    sf::Clock m_gameClock;
+    bool m_gameOver;
+    std::string m_currentInput;
 
 public:
-    GameState() : score(0), lives(3), gameOver(false), currentInput("") {}
+    GameState() : m_score(0), m_lives(3), m_gameOver(false), m_currentInput("") {}
     
-    void addScore(int points) {
-        score += points;
+    void AddScore(int points) {
+        m_score += points;
     }
     
-    void loseLife() {
-        lives--;
-        if (lives <= 0) {
-            gameOver = true;
+    void LoseLife() {
+        m_lives--;
+        if (m_lives <= 0) {
+            m_gameOver = true;
         }
     }
     
-    void resetGame() {
-        score = 0;
-        lives = 3;
-        gameOver = false;
-        currentInput = "";
-        gameClock.restart();
+    void ResetGame() {
+        m_score = 0;
+        m_lives = 3;
+        m_gameOver = false;
+        m_currentInput = "";
+        m_gameClock.restart();
     }
     
-    bool isGameOver() const {
-        return gameOver;
+    bool IsGameOver() const {
+        return m_gameOver;
     }
     
-    int getScore() const {
-        return score;
+    int GetScore() const {
+        return m_score;
     }
     
-    int getLives() const {
-        return lives;
+    int GetLives() const {
+        return m_lives;
     }
     
-    int getElapsedTime() const {
-        return static_cast<int>(gameClock.getElapsedTime().asSeconds());
+    int GetElapsedTime() const {
+        return static_cast<int>(m_gameClock.getElapsedTime().asSeconds());
     }
     
-    std::string getCurrentInput() const {
-        return currentInput;
+    std::string GetCurrentInput() const {
+        return m_currentInput;
     }
     
-    void setCurrentInput(const std::string& input) {
-        currentInput = input;
+    void SetCurrentInput(const std::string& input) {
+        m_currentInput = input;
     }
     
-    void clearCurrentInput() {
-        currentInput = "";
+    void ClearCurrentInput() {
+        m_currentInput = "";
     }
 };
 

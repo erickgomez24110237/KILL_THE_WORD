@@ -1,4 +1,3 @@
-
 @startuml diagrama
 
 class Game
@@ -14,8 +13,6 @@ Game o-- Renderer
 Game o-- WordSpawner
 Game o-- Word
 
-
-
 class GameState {
     - score: int
     - lives: int
@@ -24,16 +21,16 @@ class GameState {
     - currentInput: std::string
     --
     + GameState()
-    + addScore(points: int): void
-    + loseLife(): void
-    + resetGame(): void
-    + isGameOver(): bool
-    + getScore(): int
-    + getLives(): int
-    + getElapsedTime(): int
-    + getCurrentInput(): std::string
-    + setCurrentInput(input: const std::string&): void
-    + clearCurrentInput(): void
+    + AddScore(points: int): void
+    + LoseLife(): void
+    + ResetGame(): void
+    + IsGameOver(): bool
+    + GetScore(): int
+    + GetLives(): int
+    + GetElapsedTime(): int
+    + GetCurrentInput(): std::string
+    + SetCurrentInput(input: const std::string&): void
+    + ClearCurrentInput(): void
 }
 
 class InputHandler 
@@ -41,15 +38,14 @@ class InputHandler
     - currentInput: std::string
     --
     + InputHandler()
-    + handleTextInput(character: char, words: std::vector<Word>&): void
-    + handleBackspace(): void
-    + processWordMatch(words: std::vector<Word>&, gameState: GameState&): bool
-    + clearInput(): void
-    + getCurrentInput(): std::string
-    + handleGameInput(event: const sf::Event&, gameState: GameState&, words: std::vector<Word>&): bool
-    - isValidInputCharacter(character: char): bool
+    + HandleTextInput(character: char, words: std::vector<Word>&): void
+    + HandleBackspace(): void
+    + ProcessWordMatch(words: std::vector<Word>&, gameState: GameState&): bool
+    + ClearInput(): void
+    + GetCurrentInput(): std::string
+    + HandleGameInput(event: const sf::Event&, gameState: GameState&, words: std::vector<Word>&): bool
+    - IsValidInputCharacter(character: char): bool
 }
-
 
 class Renderer {
     - window: sf::RenderWindow*
@@ -61,18 +57,17 @@ class Renderer {
     - zombieSprite: sf::Sprite
     - playerSprite: sf::Sprite
     --
-    + Renderer(win: sf::RenderWindow*)
-    + loadAssets(): bool
-    + clear(): void
-    + display(): void
-    + drawBackground(): void
-    + drawWords(words: const std::vector<Word>&): void
-    + drawUI(gameState: const GameState&): void
-    + drawPlayer(): void
-    + drawGameOver(gameState: const GameState&): void
-    + renderFullFrame(words: const std::vector<Word>&, gameState: const GameState&): void
+    + renderer(win: sf::RenderWindow*)
+    + LoadAssets(): bool
+    + Clear(): void
+    + Display(): void
+    + DrawBackground(): void
+    + DrawWords(words: const std::vector<Word>&): void
+    + DrawUI(gameState: const GameState&): void
+    + DrawPlayer(): void
+    + DrawGameOver(gameState: const GameState&): void
+    + RenderFullFrame(words: const std::vector<Word>&, gameState: const GameState&): void
 }
-
 
 class Word {
     + text: std::string
@@ -85,34 +80,32 @@ class Word {
     + speed: float
     --
     + Word(word: const std::string&, startX: float, startY: float, wordSpeed: float)
-    + updatePosition(deltaTime: float): void
-    + isOutOfBounds(screenHeight: float): bool
-    + setActive(active: bool): void
-    + incrementProgress(): void
-    + resetProgress(): void
-    + isCompleted(): bool
+    + UpdatePosition(deltaTime: float): void
+    + IsOutOfBounds(screenHeight: float): bool
+    + SetActive(active: bool): void
+    + IncrementProgress(): void
+    + ResetProgress(): void
+    + IsCompleted(): bool
 }
-
 
 class WordSpawner {
     - wordList: std::vector<std::string>
     - spawnClock: sf::Clock
     - spawnInterval: float
-    - wordSpeed: float
+    - WordSpeed: float
     - rd: std::random_device
     - gen: std::mt19937
     - wordDist: std::uniform_int_distribution<>
     - xPosDist: std::uniform_real_distribution<>
     --
     + WordSpawner()
-    + addWord(word: const std::string&): void
-    + shouldSpawnWord(): bool
-    + generateWord(): Word
-    + updateDifficulty(): void
-    + resetSpawner(): void
-    + getSpawnInterval(): float
-    + getWordSpeed(): float
+    + AddWord(word: const std::string&): void
+    + ShouldSpawnWord(): bool
+    + GenerateWord(): Word
+    + UpdateDifficulty(): void
+    + ResetSpawner(): void
+    + GetSpawnInterval(): float
+    + GetWordSpeed(): float
 }
-
 
 @enduml

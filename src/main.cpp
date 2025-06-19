@@ -12,12 +12,12 @@
 int main() {
     Game game;
     
-    if (!game.initialize()) {
+    if (!game.Initialize()) {
         std::cerr << "Error inicializando el juego" << std::endl;
         return -1;
     }
     
-    game.run();
+    game.Run();
     
     return 0;
 }

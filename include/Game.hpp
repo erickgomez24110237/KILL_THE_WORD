@@ -23,7 +23,7 @@ private:
     sf::Font menuFont;
     
     GameStateEnum currentGameState;
-    WordSpawner spawner;
+    WordSpawner wordSpawner;
     GameState gameState;
     Renderer renderer;
     InputHandler inputHandler;
@@ -31,7 +31,7 @@ private:
     std::vector<Word> activeWords;
     sf::Clock deltaClock;
     
-    void drawMainMenu() {
+    void DrawMainMenu() {
         window.clear(sf::Color::Black);
         
         sf::Font fontBold;
@@ -92,7 +92,7 @@ private:
         window.display();
     }
     
-    bool handleMenuInput(const sf::Event& event) {
+    bool HandleMenuInput(const sf::Event& event) {
         if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Enter) {
                 currentGameState = PLAYING;
@@ -104,13 +104,13 @@ private:
         return true;
     }
     
-    void updateAllWords(float deltaTime) {
+    void UpdateAllWords(float deltaTime) {
         for (auto it = activeWords.begin(); it != activeWords.end();) {
-            it->updatePosition(deltaTime);
+            it->UpdatePosition(deltaTime);
             
-            if (it->isOutOfBounds(1400)) {
-                if (!it->isActive || !it->isCompleted()) {
-                    gameState.loseLife();
+            if (it->IsOutOfBounds(1400)) {
+                if (!it->IsActive || !it->IsCompleted()) {
+                    gameState.LoseLife();
                 }
                 it = activeWords.erase(it);
             } else {
@@ -119,22 +119,22 @@ private:
         }
     }
     
-    void removeCompletedWords() {
+    void RemoveCompletedWords() {
         activeWords.erase(
             std::remove_if(activeWords.begin(), activeWords.end(), 
-                [](const Word& word) { return word.isCompleted(); }),
+                [](const Word& word) { return word.IsCompleted(); }),
             activeWords.end()
         );
     }
     
-    void resetGame() {
-        spawner.resetSpawner();
-        gameState.resetGame();
-        inputHandler.clearInput();
+    void ResetGame() {
+        wordSpawner.ResetSpawner();
+        gameState.ResetGame();
+        inputHandler.ClearInput();
         activeWords.clear();
     }
     
-    void handleEvents() {
+    void HandleEvents() {
         sf::Event event;
         
         while (window.pollEvent(event)) {
@@ -144,15 +144,15 @@ private:
             
             switch (currentGameState) {
                 case MENU:
-                    if (!handleMenuInput(event)) {
+                    if (!HandleMenuInput(event)) {
                         window.close();
                     }
                     break;
                     
                 case PLAYING:
-                    inputHandler.handleGameInput(event, gameState, activeWords);
+                    inputHandler.HandleGameInput(event, gameState, activeWords);
                     
-                    if (gameState.isGameOver()) {
+                    if (gameState.IsGameOver()) {
                         currentGameState = GAME_OVER;
                     }
                     break;
@@ -160,11 +160,11 @@ private:
                 case GAME_OVER:
                     if (event.type == sf::Event::KeyPressed) {
                         if (event.key.code == sf::Keyboard::R) {
-                            resetGame();
+                            ResetGame();
                             currentGameState = PLAYING;
                         } else if (event.key.code == sf::Keyboard::Escape) {
                             currentGameState = MENU;
-                            resetGame();
+                            ResetGame();
                         }
                     }
                     break;
@@ -172,7 +172,7 @@ private:
         }
     }
     
-    void update(float deltaTime) {
+    void Update(float deltaTime) {
         switch (currentGameState) {
             case MENU:
                 // No hay lógica de update para el menú
@@ -180,22 +180,22 @@ private:
                 
             case PLAYING:
                 // Generar nuevas palabras
-                if (spawner.shouldSpawnWord()) {
-                    Word newWord = spawner.generateWord();
-                    if (!newWord.text.empty()) {
+                if (wordSpawner.ShouldSpawnWord()) {
+                    Word newWord = wordSpawner.GenerateWord();
+                    if (!newWord.Text.empty()) {
                         activeWords.push_back(newWord);
-                        spawner.updateDifficulty();
+                        wordSpawner.UpdateDifficulty();
                     }
                 }
                 
                 // Actualizar posiciones de palabras
-                updateAllWords(deltaTime);
+                UpdateAllWords(deltaTime);
                 
                 // Procesar coincidencias de palabras
-                inputHandler.processWordMatch(activeWords, gameState);
+                inputHandler.ProcessWordMatch(activeWords, gameState);
                 
                 // Remover palabras completadas
-                removeCompletedWords();
+                RemoveCompletedWords();
                 break;
                 
             case GAME_OVER:
@@ -204,15 +204,15 @@ private:
         }
     }
     
-    void render() {
+    void Render() {
         switch (currentGameState) {
             case MENU:
-                drawMainMenu();
+                DrawMainMenu();
                 break;
                 
             case PLAYING:
             case GAME_OVER:
-                renderer.renderFullFrame(activeWords, gameState);
+                renderer.RenderFullFrame(activeWords, gameState);
                 break;
         }
     }
@@ -223,13 +223,13 @@ public:
         window.setFramerateLimit(60);
     }
     
-    bool initialize() {
+    bool Initialize() {
         if (!menuFont.loadFromFile("assets/OpenSans-Regular.ttf")) {
             std::cerr << "Error: No se pudo cargar la fuente para el menú." << std::endl;
             return false;
         }
         
-        if (!renderer.loadAssets()) {
+        if (!renderer.LoadAssets()) {
             std::cerr << "Error cargando assets del juego" << std::endl;
             return false;
         }
@@ -237,13 +237,13 @@ public:
         return true;
     }
     
-    void run() {
+    void Run() {
         while (window.isOpen()) {
             float deltaTime = deltaClock.restart().asSeconds();
             
-            handleEvents();
-            update(deltaTime);
-            render();
+            HandleEvents();
+            Update(deltaTime);
+            Render();
         }
     }
 };
