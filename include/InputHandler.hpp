@@ -46,6 +46,8 @@ public:
                     word.setActive(true);
                 }
 
+
+
                 if (currentInput == word.originalText) {
                     gameState.addScore(word.originalText.length() * 10);
                     word.progress = word.originalText.length();
@@ -54,6 +56,7 @@ public:
                 }
 
                 
+
                 word.progress = currentInput.length();
                 word.text = word.originalText.substr(currentInput.length());
                 return true;
