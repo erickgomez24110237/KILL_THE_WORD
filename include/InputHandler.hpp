@@ -46,15 +46,6 @@ public:
                     word.setActive(true);
                 }
 
-<<<<<<< HEAD
-
-
-=======
-<<<<<<< HEAD
-=======
-                // Palabra completa
->>>>>>> a54fe4d5547f9c89da89e6320f216d896e503394
->>>>>>> 6deabbd9cb655ff02038f699e1f03680827e7c8b
                 if (currentInput == word.originalText) {
                     gameState.addScore(word.originalText.length() * 10);
                     word.progress = word.originalText.length();
@@ -62,16 +53,7 @@ public:
                     return true;
                 }
 
-<<<<<<< HEAD
                 
-
-=======
-<<<<<<< HEAD
-                
-=======
-                // Progreso parcial
->>>>>>> a54fe4d5547f9c89da89e6320f216d896e503394
->>>>>>> 6deabbd9cb655ff02038f699e1f03680827e7c8b
                 word.progress = currentInput.length();
                 word.text = word.originalText.substr(currentInput.length());
                 return true;

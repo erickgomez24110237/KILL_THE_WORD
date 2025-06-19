@@ -175,10 +175,11 @@ private:
     void update(float deltaTime) {
         switch (currentGameState) {
             case MENU:
+                // No hay lógica de update para el menú
                 break;
                 
             case PLAYING:
-                
+                // Generar nuevas palabras
                 if (spawner.shouldSpawnWord()) {
                     Word newWord = spawner.generateWord();
                     if (!newWord.text.empty()) {
@@ -187,18 +188,18 @@ private:
                     }
                 }
                 
-                
+                // Actualizar posiciones de palabras
                 updateAllWords(deltaTime);
                 
-                
+                // Procesar coincidencias de palabras
                 inputHandler.processWordMatch(activeWords, gameState);
                 
-                
+                // Remover palabras completadas
                 removeCompletedWords();
                 break;
                 
             case GAME_OVER:
-                
+                // No hay lógica de update para game over
                 break;
         }
     }
