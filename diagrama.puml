@@ -97,5 +97,3 @@ class WordSpawner {
   +getSpawnInterval(): float
   +getWordSpeed(): float
 }
-
-

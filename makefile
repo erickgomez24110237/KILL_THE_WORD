@@ -9,6 +9,13 @@ SFML := -IC:/SFML/include -LC:/SFML/lib -lsfml-graphics -lsfml-window -lsfml-sys
 CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 EXE_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%.exe,$(CPP_FILES))
 
+# Variables
+CXX = g++
+CXXFLAGS = -Iinclude -std=c++17
+SFML = -lsfml-graphics -lsfml-window -lsfml-system
+SRC = src/main.cpp src/Renderer.cpp src/Word.cpp src/WordSpawner.cpp src/GameState.cpp src/InputHandler.cpp
+BIN = bin/programa2.exe
+
 # Regla para compilar todos los .cpp
 all: $(EXE_FILES)
 
@@ -21,17 +28,9 @@ run: $(BIN_DIR)/programa.exe
 	.\$(BIN_DIR)\programa.exe
 
 # Compilar solo el archivo principal
-compile:
-	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
-
-# Compilar solo el archivo principal
 execute:
-	g++ src/ZType.cpp -o bin/programa.exe $(SFML)
-	.\$(BIN_DIR)\programa.exe
-
-execute2:
-	g++ src/ZType2.cpp -o bin/programa2.exe $(SFML)
-	.\$(BIN_DIR)\programa2.exe
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(BIN) $(SFML)
+	.\$(BIN)
 
 # Limpiar binarios
 clean:
